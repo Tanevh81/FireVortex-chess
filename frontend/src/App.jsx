@@ -42,11 +42,12 @@ function Piece({ pieceKey }) {
   )
 }
 
-function Square({ piece, isLight, isSelected, isValidMove, onClick }) {
+function Square({ piece, isLight, isSelected, isValidMove, onClick, onMouseEnter }) {
   const bg = isLight ? '#f0e8d0' : '#568a3f'
   return (
     <div
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
       style={{
         width: 64, height: 64,
         background: bg,
@@ -69,6 +70,7 @@ export default function App() {
   const [selected, setSelected] = useState(null)
   const [validMoves, setValidMoves] = useState([])
   const [status, setStatus] = useState('Ход на белите')
+  const [hoveredPiece, setHoveredPiece] = useState('')
 
   const board = game.board()
 
@@ -113,6 +115,7 @@ export default function App() {
     <div style={{ minHeight: '100vh', background: '#1a1228', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif' }}>
       <h1 style={{ color: '#f0cc38', marginBottom: 8, fontSize: 28 }}>⚔ FireVortex Chess</h1>
       <p style={{ color: '#c8b8e8', marginBottom: 16, fontSize: 14 }}>{status}</p>
+      <p style={{ color: '#f0cc38', fontSize: 12, minHeight: 18, marginBottom: 16 }}>{hoveredPiece}</p>
       <div style={{ border: '10px solid #7a5520', borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.6), inset 0 0 0 2px #c4962a' }}>
         {board.map((row, rowIdx) => (
           <div key={rowIdx} style={{ display: 'flex' }}>
@@ -129,6 +132,7 @@ export default function App() {
                   isSelected={selected === square}
                   isValidMove={validMoves.some(m => m.to === square)}
                   onClick={() => handleSquareClick(rowIdx, colIdx)}
+                  onMouseEnter={() => setHoveredPiece(pieceKey ? PIECE_NAMES[pieceKey] : '')}
                 />
               )
             })}
